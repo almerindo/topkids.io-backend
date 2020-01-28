@@ -35,8 +35,8 @@ class User extends Model {
     return this.hasMany('App/Models/Token')
   }
 
-  files () {
-    return this.hasOne('App/Models/File')
+  file () {
+    return this.belongsTo('App/Models/File')
   }
 
   giftcards () {

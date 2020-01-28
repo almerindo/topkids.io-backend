@@ -9,7 +9,7 @@ class GiftcardSchema extends Schema {
       table.increments()
       table.string('name').notNullable()
       table.text('description')
-      table.integer('price')
+      table.integer('price').notNullable()
 
       table
         .integer('user_id')

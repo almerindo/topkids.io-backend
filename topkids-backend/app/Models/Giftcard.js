@@ -4,12 +4,12 @@
 const Model = use('Model')
 
 class Giftcard extends Model {
-  giftcards () {
-    return this.hasOne('App/Models/User')
+  user () {
+    return this.belongsTo('App/Models/User')
   }
 
-  files () {
-    return this.hasOne('App/Models/File')
+  file () {
+    return this.belongsTo('App/Models/File')
   }
 }
 
