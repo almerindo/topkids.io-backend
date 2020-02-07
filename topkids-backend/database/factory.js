@@ -1,4 +1,5 @@
 'use strict'
+const crypto = require('crypto')
 
 /*
 |--------------------------------------------------------------------------
@@ -12,10 +13,15 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-// const Factory = use('Factory')
 
-// Factory.blueprint('App/Models/User', (faker) => {
-//   return {
-//     username: faker.username()
-//   }
-// })
+const Factory = use('Factory')
+
+Factory.blueprint('App/Models/User', (faker, i, data) => {
+  return {
+    username: faker.username(),
+    email: faker.email(),
+    password: '1234567890',
+    token: crypto.randomBytes(10).toString('hex'),
+    ...data
+  }
+})

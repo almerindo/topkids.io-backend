@@ -4,18 +4,17 @@ const { test, trait } = use('Test/Suite')('Session Login')
 
 trait('DatabaseTransactions')
 trait('Test/ApiClient')
-const User = use('App/Models/User')
+const Factory = use('Factory')
 
 test('Deve se Logar', async ({ client }) => {
-  let data = {
-    username: 'almerindo',
-    email: 'almerindo.rehem@gmail.com',
-    password: '1234567890'
-  }
+  await Factory.model('App/Models/User').create(
+    {
+      email: 'almerindo.rehem@gmail.com',
+      password: '1234567890'
+    }
+  )
 
-  await User.create(data)
-
-  data = {
+  const data = {
     email: 'almerindo.rehem@gmail.com',
     password: '1234567890'
   }

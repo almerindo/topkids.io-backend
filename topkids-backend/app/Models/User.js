@@ -42,6 +42,10 @@ class User extends Model {
   giftcards () {
     return this.hasMany('App/Models/Giftcard')
   }
+
+  async verify (password) {
+    return (Hash.verify(password, this.password))
+  }
 }
 
 module.exports = User
