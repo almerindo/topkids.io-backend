@@ -4,7 +4,7 @@ const Giftcard = exports = module.exports = {}
 const Mail = use('Mail')
 
 Giftcard.new = async (giftcard) => {
-  await Mail.send(['emails.new_giftcard'],
+  Mail.send(['emails.new_giftcard'],
     {
       name: giftcard.name,
       description: giftcard.description,
