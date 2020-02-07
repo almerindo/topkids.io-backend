@@ -53,7 +53,9 @@ class FileController {
       const file = await File.findOrFail(params.id)
       return response.download(Helpers.tmpPath(`uploads/${file.file}`))
     } catch (error) {
-
+      return response
+        .status(error.status)
+        .send({ error: { message: 'Erro ao exibir arquivo' } })
     }
   }
 }
