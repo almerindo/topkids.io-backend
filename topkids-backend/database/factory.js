@@ -25,3 +25,15 @@ Factory.blueprint('App/Models/User', (faker, i, data) => {
     ...data
   }
 })
+
+Factory.blueprint('App/Models/Giftcard', async (faker, i, data) => {
+  const user = await Factory.model('App/Models/User').create({
+    password: '1234567890'
+  })
+  return {
+    name: faker.sentence(),
+    description: faker.sentence(),
+    price: '123456',
+    user_id: user.id
+  }
+})

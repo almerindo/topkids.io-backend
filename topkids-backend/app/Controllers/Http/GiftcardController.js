@@ -56,13 +56,19 @@ class GiftcardController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params }) {
-    const gifitcard = await Giftcard.findOrFail(params.id)
+  async show ({ params, response }) {
+    try {
+      const gifitcard = await Giftcard.findOrFail(params.id)
 
-    await gifitcard.load('user')
-    await gifitcard.load('file')
+      await gifitcard.load('user')
+      await gifitcard.load('file')
 
-    return gifitcard
+      return gifitcard
+    } catch (error) {
+      return response
+        .status(error.status)
+        .send({ error: { message: 'Erro ao Exibir Giftcard' } })
+    }
   }
 
   /**
@@ -73,15 +79,19 @@ class GiftcardController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request }) {
-    const gifitcard = await Giftcard.findOrFail(params.id)
-    const data = request.only(['name', 'description', 'price'])
+  async update ({ params, request, response }) {
+    try {
+      const gifitcard = await Giftcard.findOrFail(params.id)
+      const data = request.only(['name', 'description', 'price', 'file_id'])
 
-    gifitcard.merge(data)
-
-    await gifitcard.save()
-
-    return gifitcard
+      gifitcard.merge(data)
+      await gifitcard.save()
+      return gifitcard
+    } catch (error) {
+      return response
+        .status(error.status)
+        .send({ error: { message: 'Erro ao Atualizar Giftcard' } })
+    }
   }
 
   /**
@@ -92,10 +102,16 @@ class GiftcardController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params }) {
-    const gifitcard = await Giftcard.findOrFail(params.id)
+  async destroy ({ params, response }) {
+    try {
+      const gifitcard = await Giftcard.findOrFail(params.id)
 
-    await gifitcard.delete()
+      await gifitcard.delete()
+    } catch (error) {
+      return response
+        .status(error.status)
+        .send({ error: { message: 'Erro ao apagar giftcard' } })
+    }
   }
 }
 
