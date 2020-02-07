@@ -6,6 +6,8 @@
 
 const Giftcard = use('App/Models/Giftcard')
 
+const Event = use('Event')
+
 /**
  * Resourceful controller for interacting with giftcards
  */
@@ -40,6 +42,7 @@ class GiftcardController {
     const data = request.only(['name', 'description', 'price'])
 
     const giftcard = await Giftcard.create({ ...data, user_id: auth.user.id })
+    Event.fire('new::giftCard', giftcard)
 
     return giftcard
   }
