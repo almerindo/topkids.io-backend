@@ -39,12 +39,18 @@ class GiftcardController {
    * @param {Response} ctx.response
    */
   async store ({ request, response, auth }) {
-    const data = request.only(['name', 'description', 'price'])
+    try {
+      const data = request.only(['name', 'description', 'price'])
 
-    const giftcard = await Giftcard.create({ ...data, user_id: auth.user.id })
-    Event.fire('new::giftCard', giftcard)
+      const giftcard = await Giftcard.create({ ...data, user_id: auth.user.id })
+      Event.fire('new::giftCard', giftcard)
 
-    return giftcard
+      return giftcard
+    } catch (error) {
+      return response
+        .status(error.status)
+        .send({ error: { message: 'Erro ao cadastrar Giftcard' } })
+    }
   }
 
   /**
