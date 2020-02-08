@@ -21,3 +21,7 @@ Route.group(() => {
   Route.post('files', 'FileController.store')
   Route.resource('giftcards', 'GiftcardController').apiOnly()
 }).middleware('auth')
+
+Route.group(() => {
+  Route.resource('payments', 'PaymentGateway').apiOnly()
+}).middleware('auth')

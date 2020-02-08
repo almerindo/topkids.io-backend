@@ -3,8 +3,10 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 
 const Giftcard = use('App/Models/Giftcard')
+const File = use('App/Models/File')
 
 const Event = use('Event')
 
@@ -21,11 +23,8 @@ class GiftcardController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-    const gifitcards = await Giftcard
-      .query()
-      .with('user')
-      .fetch()
+  async index ({ auth, request, response, view }) {
+    const gifitcards = await auth.user.giftcards().fetch()
 
     return gifitcards
   }
@@ -42,8 +41,8 @@ class GiftcardController {
     try {
       const data = request.only(['name', 'description', 'price'])
 
-      const giftcard = await Giftcard.create({ ...data, user_id: auth.user.id })
-      Event.fire('new::giftCard', giftcard)
+      const giftcard = await auth.user.giftcards().create({ ...data, user_id: auth.user.id })
+      // Event.fire('new::giftCard', giftcard)
 
       return giftcard
     } catch (error) {
@@ -62,12 +61,14 @@ class GiftcardController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, response }) {
+  async show ({ params, auth, response }) {
     try {
-      const gifitcard = await Giftcard.findOrFail(params.id)
+      const gifitcard = await auth.user.giftcards()
+        .where({ id: params.id })
+        .first()
 
-      await gifitcard.load('user')
-      await gifitcard.load('file')
+      // await gifitcard.load('user')
+      // await gifitcard.load('file')
 
       return gifitcard
     } catch (error) {
@@ -85,18 +86,32 @@ class GiftcardController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ params, request, response, auth }) {
     try {
-      const gifitcard = await Giftcard.findOrFail(params.id)
       const data = request.only(['name', 'description', 'price', 'file_id'])
 
+      if (data.file_id) {
+        await File.findOrFail(data.file_id)
+      }
+
+      const gifitcard = await auth.user.giftcards()
+        .where({ id: params.id })
+        .first()
+
       gifitcard.merge(data)
+
       await gifitcard.save()
+
       return gifitcard
     } catch (error) {
       return response
         .status(error.status)
-        .send({ error: { message: 'Erro ao Atualizar Giftcard' } })
+        .send({
+          error: {
+            message: 'Erro ao Atualizar Giftcard',
+            detail: error.message
+          }
+        })
     }
   }
 
@@ -108,9 +123,11 @@ class GiftcardController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, response }) {
+  async destroy ({ params, auth, response }) {
     try {
-      const gifitcard = await Giftcard.findOrFail(params.id)
+      const gifitcard = await auth.user.giftcards()
+        .where({ id: params.id })
+        .first()
 
       await gifitcard.delete()
     } catch (error) {
