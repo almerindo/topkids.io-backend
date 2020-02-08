@@ -18,7 +18,7 @@ class FileController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store ({ request, response, auth }) {
     try {
       if (!request.file('file')) return
 
@@ -33,11 +33,14 @@ class FileController {
         throw upload.error()
       }
 
+      // console.log(`auth.user : ${auth.user.id}`)
+
       const file = await File.create({
         file: fileName,
         name: upload.clientName,
         type: upload.type,
-        subtype: upload.subtype
+        subtype: upload.subtype,
+        user_id: auth.user.id
       })
 
       return file
@@ -48,9 +51,21 @@ class FileController {
     }
   }
 
-  async show ({ params, response }) {
+  async show ({ params, response, auth }) {
     try {
       const file = await File.findOrFail(params.id)
+
+      if (file.user_id !== auth.user.id) {
+        return response
+          .status(401)
+          .send({
+            error: {
+              message: 'Arquivo Não pertence ao usuário logado',
+              detail: `file.user_id: ${file.user_id}  !== auth.user.id: ${auth.user.id}`
+            }
+          })
+      }
+
       return response.download(Helpers.tmpPath(`uploads/${file.file}`))
     } catch (error) {
       return response

@@ -35,6 +35,7 @@ class User extends Model {
     return this.hasMany('App/Models/Token')
   }
 
+  // Foto do usuário
   file () {
     return this.belongsTo('App/Models/File')
   }

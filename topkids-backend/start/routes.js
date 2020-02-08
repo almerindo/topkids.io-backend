@@ -8,17 +8,17 @@ Route.get('/', () => {
 })
 
 Route.post('users', 'UserController.store')
-Route.get('users', 'UserController.index')
+Route.get('users', 'UserController.index') // Somente Admin
 
 Route.post('sessions', 'SessionController.store')
 
 Route.post('passwords', 'ForgotPasswordController.store')
 Route.put('passwords', 'ForgotPasswordController.update')
 
-Route.get('files/:id', 'FileController.show')
-
 Route.group(() => {
+  Route.get('files/:id', 'FileController.show')
   Route.post('files', 'FileController.store')
+
   Route.resource('giftcards', 'GiftcardController').apiOnly()
 }).middleware('auth')
 
