@@ -19,6 +19,8 @@ const providers = [
   '@adonisjs/mail/providers/MailProvider',
   '@adonisjs/framework/providers/ViewProvider',
   '@adonisjs/session/providers/SessionProvider',
+  'adonis-kue/providers/KueProvider',
+  '@adonisjs/redis/providers/RedisProvider',
   '@adonisjs/vow/providers/VowProvider'
 
 ]
@@ -33,7 +35,8 @@ const providers = [
 |
 */
 const aceProviders = [
-  '@adonisjs/lucid/providers/MigrationsProvider'
+  '@adonisjs/lucid/providers/MigrationsProvider',
+  'adonis-kue/providers/CommandsProvider'
 ]
 
 /*
@@ -60,4 +63,16 @@ const aliases = {}
 */
 const commands = []
 
-module.exports = { providers, aceProviders, aliases, commands }
+/*
+|--------------------------------------------------------------------------
+| Jobs background
+|--------------------------------------------------------------------------
+|
+| Here you store background jobs for your package
+|
+*/
+const jobs = [
+  'App/Jobs/MailNewGiftCard'
+]
+
+module.exports = { providers, aceProviders, aliases, commands, jobs }

@@ -14,5 +14,5 @@ Giftcard.new = async (giftcard) => {
       message.to('contato@topkids.io')
       message.from('contato@topkids.io')
     })
-  console.log(giftcard.name)
+  // console.log(giftcard.name)
 }

@@ -4,6 +4,12 @@
 const Model = use('Model')
 
 class Giftcard extends Model {
+  static boot () {
+    super.boot()
+
+    this.addHook('afterCreate', 'GiftCardCreateHook.sendNewGiftCardMail')
+  }
+
   user () {
     return this.belongsTo('App/Models/User')
   }
