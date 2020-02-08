@@ -19,7 +19,7 @@ class UsersRelationshipSchema extends Schema {
   }
 
   down () {
-    this.alter('users', (table) => {
+    this.alter('files', (table) => {
       table.dropColumn('user_id')
     })
   }

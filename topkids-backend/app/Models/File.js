@@ -12,7 +12,7 @@ class File extends Model {
     return `${Env.get('APP_URL')}/files/${id}`
   }
 
-  owner () {
+  user () {
     return this.belongsTo('App/Models/User')
   }
 }
